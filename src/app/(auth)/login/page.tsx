@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -6,14 +6,14 @@ import {
   faGoogle,
   faLinkedinIn,
 } from "@fortawesome/free-brands-svg-icons";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 const login = () => {
-  const router = useRouter()
+  const router = useRouter();
 
-  const login =()=>{
-    router.push('/homepage')
-  }
+  const login = () => {
+    router.push("/homepage");
+  };
   return (
     <div className="grid grid-cols-3 gap4 bg-white">
       <div className="col-span-2 grid place-items-center">
@@ -25,16 +25,16 @@ const login = () => {
             Login using social networks
           </p>
           <div className="flex space-x-3 justify-center">
-            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-600">
+            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-600 cursor-pointer">
               <FontAwesomeIcon
                 icon={faFacebookF}
                 className="text-white h-5 w-5"
               />
             </div>
-            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-red-500">
+            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-red-500 cursor-pointer">
               <FontAwesomeIcon icon={faGoogle} className="text-white h-5 w-5" />
             </div>
-            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-700">
+            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-700 cursor-pointer">
               <FontAwesomeIcon
                 icon={faLinkedinIn}
                 className="text-white h-5 w-5"
@@ -73,7 +73,10 @@ const login = () => {
           </div>
 
           <div className="text-center">
-            <button className="bg-[#25b498] cursor-pointer text-white font-bold rounded-3xl  pr-18 pl-18 pt-3 pb-3" onClick={login}>
+            <button
+              className="bg-[#25b498] cursor-pointer text-white font-bold rounded-3xl  pr-18 pl-18 pt-3 pb-3"
+              onClick={login}
+            >
               Sign In
             </button>
           </div>
