@@ -1,4 +1,5 @@
-import React from "react";
+'use client';
+import React, { useState } from "react";
 
 const Modal = ({
   showModal,
@@ -7,16 +8,24 @@ const Modal = ({
 }: {
   showModal: boolean;
   setModal: (modal: boolean) => void;
-  handleSubmit: (e: React.FormEvent) => void
+  handleSubmit: (data: { community: string, title: string, content: string }) => void
 }) => {
   if (!showModal) return null;
+  const [community, setCommunity] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmitPost =()=> {
-    if (handleSubmit) {
-      const formEvent = new Event('submit') as unknown as React.FormEvent;
-      console.log('formEvent', formEvent);
-      handleSubmit(formEvent);
+    if(!community || !title || !content) {
+      setError("All fields are required");
+      return
     }
+    handleSubmit({
+      community,
+      title,
+      content
+    });
     setModal(false);
   }
   return (
@@ -36,11 +45,12 @@ const Modal = ({
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              {error && <p className="text-red-500 text-sm text-right">{error}</p>}
               <div className="sm:flex sm:items-start text-2xl font-semibold">
                 Create Post
               </div>
               <div className="h-10 mt-3">
-                <select className="h-auto focus:outline-none border border-[#9dccac] text-green-500 rounded-md text-xs px-2 py-2 font-semibold">
+                <select className="h-auto focus:outline-none border border-[#9dccac] text-green-500 rounded-md text-xs px-2 py-2 font-semibold" onChange={(e) => setCommunity(e.target.value)} value={community}>
                   <option value="">Choose a Community</option>
                   <option value="music">Music</option>
                   <option value="foods">Foods</option>
@@ -51,12 +61,16 @@ const Modal = ({
                 <input
                   className="w-full focus:outline-none"
                   placeholder="Title"
+                  onChange={(e) => setTitle(e.target.value)}
+                  value={title}
                 />
               </div>
               <div className="mt-3 relative border border-[#f1f1f1] px-2 py-1 rounded-md">
                 <textarea
                   className="w-full focus:outline-none h-40"
                   placeholder="What's on your mind..."
+                  onChange={(e) => setContent(e.target.value)}
+                  value={content}
                 ></textarea>
               </div>
             </div>

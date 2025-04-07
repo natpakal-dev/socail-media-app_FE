@@ -93,7 +93,7 @@ const login = () => {
         </div>
         <div className="text-center">
           <button className="bg-white cursor-pointer text-black font-bold rounded-3xl px-8 py-3 mt-8">
-            Sign In
+            Sign Up
           </button>
         </div>
       </div>
