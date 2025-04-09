@@ -131,7 +131,7 @@ export default function page() {
     }
   };
   return (
-    <div className="max-w-3xl">
+    <div className="min-h-screen max-w-3xl">
       <div className="flex items-center mb-4">
         <div className="flex-grow">
           <div className="relative">
