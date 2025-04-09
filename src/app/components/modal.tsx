@@ -1,33 +1,76 @@
-'use client';
-import React, { useState } from "react";
+"use client";
+import { getPost } from "@/features/post/api";
+import { Post } from "@/features/post/types";
+import React, { useEffect, useState } from "react";
 
 const Modal = ({
   showModal,
   setModal,
-  handleSubmit
+  handleSubmit,
+  titlePost,
+  editModal,
+  postsEdit,
+  handleEdit,
 }: {
   showModal: boolean;
   setModal: (modal: boolean) => void;
-  handleSubmit: (data: { community: string, title: string, content: string }) => void
+  handleSubmit: (data: {
+    community: string;
+    title: string;
+    content: string;
+  }) => void;
+  titlePost: string;
+  editModal?: boolean;
+  postsEdit?: Post[];
+  handleEdit?: (
+    data: {
+      community: string;
+      title: string;
+      content: string;
+    },
+    id: string
+  ) => void;
 }) => {
   if (!showModal) return null;
   const [community, setCommunity] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
-
-  const handleSubmitPost =()=> {
-    if(!community || !title || !content) {
+  const [id, setId] = useState("");
+  const handleSubmitPost = () => {
+    if (!community || !title || !content) {
       setError("All fields are required");
-      return
+      return;
     }
     handleSubmit({
       community,
       title,
-      content
+      content,
     });
     setModal(false);
-  }
+  };
+
+  const fetchPosts = async (id: string) => {
+    if (!editModal) return null;
+    try {
+      const response = await getPost(id);
+      setCommunity(response.data.community);
+      setTitle(response.data.title);
+      setContent(response.data.content);
+      console.log("data", response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const id = postsEdit?.map((e) => String(e._id))?.[0];
+    if (id) {
+      setId(id);
+      fetchPosts(id);
+    }
+  }, []);
+
   return (
     <div
       className="relative z-10"
@@ -40,17 +83,22 @@ const Modal = ({
         aria-hidden="true"
         onClick={() => setModal(false)}
       ></div>
-
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              {error && <p className="text-red-500 text-sm text-right">{error}</p>}
+              {error && (
+                <p className="text-red-500 text-sm text-right">{error}</p>
+              )}
               <div className="sm:flex sm:items-start text-2xl font-semibold">
-                Create Post
+                {titlePost}
               </div>
               <div className="h-10 mt-3">
-                <select className="h-auto focus:outline-none border border-[#9dccac] text-green-500 rounded-md text-xs px-2 py-2 font-semibold" onChange={(e) => setCommunity(e.target.value)} value={community}>
+                <select
+                  className="h-auto focus:outline-none border border-[#9dccac] text-green-500 rounded-md text-xs px-2 py-2 font-semibold"
+                  onChange={(e) => setCommunity(e.target.value)}
+                  value={community}
+                >
                   <option value="">Choose a Community</option>
                   <option value="music">Music</option>
                   <option value="foods">Foods</option>
@@ -75,13 +123,25 @@ const Modal = ({
               </div>
             </div>
             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-              <button
-                type="button"
-                className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto cursor-pointer"
-                onClick={handleSubmitPost}
-              >
-                Post
-              </button>
+              {editModal ? (
+                <button
+                  type="button"
+                  className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto cursor-pointer"
+                  onClick={() =>
+                    handleEdit?.({ community, title, content }, id)
+                  }
+                >
+                  Confirm
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto cursor-pointer"
+                  onClick={() => handleSubmitPost()}
+                >
+                  Post
+                </button>
+              )}
               <button
                 type="button"
                 className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto cursor-pointer"

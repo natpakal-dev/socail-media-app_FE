@@ -12,7 +12,7 @@ const login = () => {
   const router = useRouter();
 
   const login = () => {
-    router.push("/homepage");
+    router.push("/home-page");
   };
   return (
     <div className="grid grid-cols-3 gap4 bg-white">

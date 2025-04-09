@@ -11,15 +11,17 @@ const listPost = () => {
     try {
       const response = await getPost(`${slug}`);
       setPost(response.data);
-      console.log('res',response.data);
+      console.log("res", response.data);
     } catch (error) {}
   };
   useEffect(() => {
     fetchPost();
   }, []);
-  return <div>
-   <h1>Hello, Blog Post Page! ID: {slug}</h1>
-  </div>;
+  return (
+    <div className="min-h-screen">
+      <h1>Hello, Blog Post Page! ID: {slug}</h1>
+    </div>
+  );
 };
 
 export default listPost;
