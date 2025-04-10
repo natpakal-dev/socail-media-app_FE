@@ -28,7 +28,7 @@ export default function HomepageLayout({
           <div className="col-span-2">
             <Sidebar />
           </div>
-          <main className="col-span-6 p-4">{children}</main>
+          <main className="col-span-6">{children}</main>
         </div>
       </body>
     </html>

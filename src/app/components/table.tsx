@@ -33,8 +33,8 @@ const Table = ({
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <FontAwesomeIcon icon={faCircleUser} size="2xl"/>
-                    <p className="ml-2">Natpakal</p>
+                    <FontAwesomeIcon icon={faCircleUser} size="2xl" color="green"/>
+                    <p className="ml-2  text-sm">Natpakal</p>
                   </div>
                   <div>
                     <FontAwesomeIcon icon={faPenToSquare} className="mr-3" onClick={(e)=>{
@@ -54,7 +54,7 @@ const Table = ({
                 <div className="text-sm">{post.content}</div>
                 <div className="flex items-center mt-2">
                   <FontAwesomeIcon icon={faComment} color="gray" />
-                  <p className="ml-2 text-[#9e9e9e]">4 comments</p>
+                  <p className="ml-2 text-[#9e9e9e]">0 comments</p>
                 </div>
               </div>
             ) : (
@@ -64,8 +64,8 @@ const Table = ({
                 onClick={() => onPostClick(post._id)}
               >
                 <div className="flex items-center">
-                  <FontAwesomeIcon icon={faCircleUser} size="2xl" />
-                  <p className="ml-2">Natpakal</p>
+                  <FontAwesomeIcon icon={faCircleUser} size="2xl" color="green" />
+                  <p className="ml-2 text-sm">Natpakal</p>
                 </div>
                 <div className="p-1 bg-[#f3f3f3] w-fit text-sm rounded-md text-[#9e9e9e] mt-2 mb-2 ">
                   {post.community}
@@ -74,7 +74,7 @@ const Table = ({
                 <div className="text-sm">{post.content}</div>
                 <div className="flex items-center mt-2">
                   <FontAwesomeIcon icon={faComment} color="gray" />
-                  <p className="ml-2 text-[#9e9e9e]">4 comments</p>
+                  <p className="ml-2 text-[#9e9e9e]">0 comments</p>
                 </div>
               </div>
             )}

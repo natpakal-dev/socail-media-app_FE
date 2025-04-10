@@ -15,19 +15,27 @@ import Table from "@/app/components/table";
 import { Post } from "@/features/post/types";
 import { useRouter } from "next/navigation";
 import ButtonCreate from "@/app/components/buttonCreate";
-
+import InputSearch from "@/app/components/search";
 export default function page() {
   const [modal, setModal] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [postsFilter, setPostsFilter] = useState<Post[]>(posts);
   const [postsEdit, setPostsEdit] = useState<Post[]>([]);
-  const [editModal, setEditModal] = useState(true);
   const [titlePost, setTitlePost] = useState("");
+  const [modalEditModal, setEditModal] = useState(false);
+  const [searchValueCommunity, setSearchValueCommunity] = useState("");
+
   const router = useRouter();
 
   const handleModal = (modal: boolean, titlePost: string, post?: Post[]) => {
     setTitlePost(titlePost);
     setPostsEdit(post ?? []);
     setModal(modal);
+    if (titlePost === "Create Post") {
+      setEditModal(false);
+    } else {
+      setEditModal(true);
+    }
   };
 
   const handleSubmit = async ({
@@ -61,8 +69,9 @@ export default function page() {
     try {
       const response = await getAllPosts();
       setPosts(response.data);
+      setPostsFilter(response.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -71,7 +80,7 @@ export default function page() {
   }, []);
 
   const onPostClick = (id: string) => {
-    router.push(`/posts/${id}`);
+    router.push(`/post/${id}`);
   };
 
   const handleDelete = (id: string) => {
@@ -120,7 +129,7 @@ export default function page() {
         showConfirmButton: false,
         timer: 2500,
       });
-      setModal(false)
+      setModal(false);
       fetchPosts();
     } catch (error: any) {
       Swal.fire({
@@ -130,24 +139,54 @@ export default function page() {
       });
     }
   };
+  const SearchPost = (title: string, community: string) => {
+    const hasTitle = !!title;
+    const selectedCommunity = community || searchValueCommunity;
+    const hasCommunity = !!selectedCommunity;
+
+    if (!hasTitle && !hasCommunity) {
+      setPostsFilter(posts);
+      return;
+    }
+    const filtered = posts.filter((post) => {
+      const matchesTitle = hasTitle
+        ? post.title.toLowerCase().includes(title.toLowerCase())
+        : true;
+      let matchesCommunity;
+      if (selectedCommunity !== "All") {
+        matchesCommunity = hasCommunity
+          ? post.community.toLowerCase() === selectedCommunity.toLowerCase()
+          : true;
+      } else {
+        matchesCommunity = true;
+      }
+      return matchesTitle && matchesCommunity;
+    });
+
+    if (community) {
+      setSearchValueCommunity(community);
+    }
+    if (selectedCommunity === "All" && !hasTitle) {
+      setPostsFilter(posts);
+      return;
+    }
+    setPostsFilter(filtered);
+  };
+
   return (
-    <div className="min-h-screen max-w-3xl">
+    <div className="min-h-screen max-w-3xl mt-5">
       <div className="flex items-center mb-4">
         <div className="flex-grow">
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-              <FontAwesomeIcon icon={faMagnifyingGlass} width={20} />
-            </div>
-            <input
-              type="search"
-              className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none"
-              placeholder="Search Mockups, Logos..."
-            />
+            <InputSearch SearchPost={SearchPost} />
           </div>
         </div>
         <div className="ml-3">
-          <select className="p-2 h-full focus:outline-none">
-            <option value="Community">Community</option>
+          <select
+            className="p-2 h-full focus:outline-none"
+            onChange={(e) => SearchPost("", e.target.value)}
+          >
+            <option value="All">Community</option>
             <option value="Music">Music</option>
             <option value="Foods">Foods</option>
             <option value="Technology">Technology</option>
@@ -158,9 +197,9 @@ export default function page() {
         </div>
       </div>
       <Table
-        posts={posts}
+        posts={postsFilter}
         onPostClick={onPostClick}
-        editModal={editModal}
+        editModal={true}
         handleDelete={handleDelete}
         handleModal={handleModal}
       />
@@ -170,7 +209,7 @@ export default function page() {
           showModal={modal}
           setModal={setModal}
           handleSubmit={handleSubmit}
-          editModal={editModal}
+          editModal={modalEditModal}
           postsEdit={postsEdit}
           handleEdit={handleEdit}
         />

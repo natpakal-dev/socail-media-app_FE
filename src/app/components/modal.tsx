@@ -49,7 +49,6 @@ const Modal = ({
     });
     setModal(false);
   };
-
   const fetchPosts = async (id: string) => {
     if (!editModal) return null;
     try {
@@ -57,7 +56,6 @@ const Modal = ({
       setCommunity(response.data.community);
       setTitle(response.data.title);
       setContent(response.data.content);
-      console.log("data", response.data);
     } catch (error) {
       console.log(error);
     }
