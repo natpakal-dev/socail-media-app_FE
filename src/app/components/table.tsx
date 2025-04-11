@@ -7,19 +7,22 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { formatDistanceToNow } from "date-fns";
+import moment from "moment";
 const Table = ({
   posts,
   onPostClick,
   editModal,
   handleDelete,
-  handleModal
+  handleModal,
 }: {
   posts: Post[];
   onPostClick: (id: string) => void;
   editModal: boolean;
   handleDelete?: (id: string) => void;
-  handleModal?: (modal: boolean, titlePost: string, post: Post[]) => void
+  handleModal?: (modal: boolean, titlePost: string, post: Post[]) => void;
 }) => {
+  console.log("post", posts[0]?.updatedAt);
   return (
     <div>
       <div>
@@ -33,18 +36,37 @@ const Table = ({
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <FontAwesomeIcon icon={faCircleUser} size="2xl" color="green"/>
-                    <p className="ml-2  text-sm">Natpakal</p>
+                    <FontAwesomeIcon
+                      icon={faCircleUser}
+                      size="2xl"
+                      color="green"
+                    />
+                    <p className="ml-2 text-sm">Natpakal</p>
+                    <p className="ml-2  text-xs text-[#9e9e9e]">
+                      {" "}
+                      {post.updatedAt
+                        ? moment(post.updatedAt).fromNow() // ใช้ moment.js เพื่อคำนวณเวลา ago
+                        : "Invalid date"}
+                    </p>
                   </div>
                   <div>
-                    <FontAwesomeIcon icon={faPenToSquare} className="mr-3" onClick={(e)=>{
-                      e.stopPropagation();
-                      handleModal?.(true,'Edit Post',[post])
-                    }} color="#4aa56a"/>
-                    <FontAwesomeIcon icon={faTrash} onClick={(e)=>{
-                      e.stopPropagation();
-                      handleDelete?.(post._id)}
-                      } color="#4aa56a"/>
+                    <FontAwesomeIcon
+                      icon={faPenToSquare}
+                      className="mr-3"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleModal?.(true, "Edit Post", [post]);
+                      }}
+                      color="#4aa56a"
+                    />
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete?.(post._id);
+                      }}
+                      color="#4aa56a"
+                    />
                   </div>
                 </div>
                 <div className="p-1 bg-[#f3f3f3] w-fit text-sm rounded-md text-[#9e9e9e] mt-2 mb-2 ">
@@ -64,8 +86,18 @@ const Table = ({
                 onClick={() => onPostClick(post._id)}
               >
                 <div className="flex items-center">
-                  <FontAwesomeIcon icon={faCircleUser} size="2xl" color="green" />
+                  <FontAwesomeIcon
+                    icon={faCircleUser}
+                    size="2xl"
+                    color="green"
+                  />
                   <p className="ml-2 text-sm">Natpakal</p>
+                  <p className="ml-2  text-xs text-[#9e9e9e]">
+                    {" "}
+                    {post.updatedAt
+                      ? moment(post.updatedAt).fromNow()
+                      : "Invalid date"}
+                  </p>
                 </div>
                 <div className="p-1 bg-[#f3f3f3] w-fit text-sm rounded-md text-[#9e9e9e] mt-2 mb-2 ">
                   {post.community}
