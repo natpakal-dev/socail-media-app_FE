@@ -14,7 +14,6 @@ import InputSearch from "@/app/components/search";
 export default function HomePage() {
   const [modal, setModal] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
-  const [editModal, setEditModal] = useState(false);
   const [postsFilter, setPostsFilter] = useState<Post[]>(posts);
   const [searchValueCommunity, setSearchValueCommunity] = useState("");
   const router = useRouter();
@@ -124,7 +123,7 @@ export default function HomePage() {
           <ButtonCreate title="Create+" handleModal={handleModal} />
         </div>
       </div>
-      <Table posts={postsFilter} onPostClick={onPostClick} editModal={editModal} />
+      <Table posts={postsFilter} onPostClick={onPostClick} editModal={false} />
       {modal && (
         <Modal
           titlePost="Create Post"
